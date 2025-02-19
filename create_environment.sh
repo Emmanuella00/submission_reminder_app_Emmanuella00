@@ -6,7 +6,33 @@ mkdir -p "submission_reminder_$username"
 cd "submission_reminder_$username"
  
 
-#making the first file!
+#creating subdirectories and their files
+
+mkdir -p app
+cat > app/reminder.sh << 'EOF'
+#!/bin/bash
+
+# Source environment variables and helper functions
+source ../config/config.env
+source ../modules/functions.sh
+
+# Path to the submissions file
+submissions_file="../assets/submissions.txt"
+
+# Print remaining time and run the reminder function
+echo "Assignment: $ASSIGNMENT"
+echo "Days remaining to submit: $DAYS_REMAINING days"
+echo "--------------------------------------------"
+
+check_submissions $submissions_file
+EOF
+
+#make the file executable
+chmod +x app/reminder.sh
+
+
+#creating my second subdirectory and its file
+
 mkdir -p modules
 cat > modules/functions.sh << 'EOF'
 #!/bin/bash
@@ -34,7 +60,8 @@ EOF
 #making the file executable
 chmod +x modules/functions.sh
 
-#creating my second executable 
+
+#creating my third subdirectory and its file  
 mkdir -p assets
 cat > assets/submissions.txt << 'EOF'
 Student, assignment, submission status
@@ -42,18 +69,17 @@ Chinemerem, Shell Navigation, not submitted
 Chiagoziem, Git, submitted
 Divine, Shell Navigation, not submitted
 Anissa, Shell Basics, submitted
-Emmanuel, Shell Permissions, submitted
-Ade, Python, submitted
-Sade, Git, not submitted
-David, Shell Navigation, submitted
-Malle, Intro to Linux, submitted
-Nnamdi, Shell Loops, not submitted
+Emmanuella, Shell Permissions, submitted
+jacky, Shell Basics, submitted
+ocean, Git, submitted
+Davina, shell navigation, submitted
+kevinne, Shell Basics, not submitted
 EOF
 
 #making the file executable
 chmod +x assets/submissions.txt
 
-#creating my third  file
+#creating my fourth subdirectory and its  file
 mkdir -p config
 cat > config/config.env << 'EOF'
 # This is the config file
@@ -64,28 +90,7 @@ EOF
 #making the file executable
 chmod +x config/config.env
 
-#creating my  fourth file
-mkdir -p app
-cat > app/reminder.sh << 'EOF'
-#!/bin/bash
 
-# Source environment variables and helper functions
-source ../config/config.env
-source ../modules/functions.sh
-
-# Path to the submissions file
-submissions_file="../assets/submissions.txt"
-
-# Print remaining time and run the reminder function
-echo "Assignment: $ASSIGNMENT"
-echo "Days remaining to submit: $DAYS_REMAINING days"
-echo "--------------------------------------------"
-
-check_submissions $submissions_file
-EOF
-
-#make the file executable
-chmod +x app/reminder.sh
 
 #create my last file
 cat > startup.sh << 'EOF'
