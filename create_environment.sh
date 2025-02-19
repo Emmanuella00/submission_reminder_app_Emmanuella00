@@ -1,26 +1,99 @@
 #!/bin/bash
 
-# Step 1: Ask for user's name
-read -p "Enter your name:" $username
+#Enter your username to create a directory
+read -p "Enter your name: " username
+mkdir -p "submission_reminder_$username"
+cd "submission_reminder_$username"
+ 
 
-# Step 2: Create the main directory
-main_dir="submission_reminder_${userName}"
-mkdir -p "$main_dir"
+#making the first file!
+mkdir -p modules
+cat > modules/functions.sh << 'EOF'
+#!/bin/bash
 
-# Step 3: Create the required subdirectories
-mkdir -p "$main_dir/config"
-mkdir -p "$main_dir/scripts"
-mkdir -p "$main_dir/data"
+# Function to read submissions file and output students who have not submitted
+function check_submissions {
+    local submissions_file=$1
+    echo "Checking submissions in $submissions_file"
 
-# Step 4: Create the required files
-touch "$main_dir/config/config.env"
-touch "$main_dir/scripts/reminder.sh"
-touch "$main_dir/scripts/functions.sh"
-touch "$main_dir/scripts/startup.sh"
-touch "$main_dir/data/submissions.txt"
+    # Skip the header and iterate through the lines
+    while IFS=, read -r student assignment status; do
+        # Remove leading and trailing whitespace
+        student=$(echo "$student" | xargs)
+        assignment=$(echo "$assignment" | xargs)
+        status=$(echo "$status" | xargs)
 
-# Step 5: Make startup.sh executable
-chmod +x "$main_dir/scripts/startup.sh"
+        # Check if assignment matches and status is 'not submitted'
+        if [[ "$assignment" == "$ASSIGNMENT" && "$status" == "not submitted" ]]; then
+            echo "Reminder: $student has not submitted the $ASSIGNMENT assignment!"
+        fi
+    done < <(tail -n +2 "$submissions_file") # Skip the header
+}
+EOF
 
-# Step 6: Print success message
-echo "Environment setup complete! The directory structure has been created inside $main_dir." 
+#making the file executable
+chmod +x modules/functions.sh
+
+#creating my second executable 
+mkdir -p assets
+cat > assets/submissions.txt << 'EOF'
+Student, assignment, submission status
+Chinemerem, Shell Navigation, not submitted
+Chiagoziem, Git, submitted
+Divine, Shell Navigation, not submitted
+Anissa, Shell Basics, submitted
+Emmanuel, Shell Permissions, submitted
+Ade, Python, submitted
+Sade, Git, not submitted
+David, Shell Navigation, submitted
+Malle, Intro to Linux, submitted
+Nnamdi, Shell Loops, not submitted
+EOF
+
+#making the file executable
+chmod +x assets/submissions.txt
+
+#creating my third  file
+mkdir -p config
+cat > config/config.env << 'EOF'
+# This is the config file
+ASSIGNMENT="Shell Navigation"
+DAYS_REMAINING=2
+EOF
+
+#making the file executable
+chmod +x config/config.env
+
+#creating my  fourth file
+mkdir -p app
+cat > app/reminder.sh << 'EOF'
+#!/bin/bash
+
+# Source environment variables and helper functions
+source ../config/config.env
+source ../modules/functions.sh
+
+# Path to the submissions file
+submissions_file="../assets/submissions.txt"
+
+# Print remaining time and run the reminder function
+echo "Assignment: $ASSIGNMENT"
+echo "Days remaining to submit: $DAYS_REMAINING days"
+echo "--------------------------------------------"
+
+check_submissions $submissions_file
+EOF
+
+#make the file executable
+chmod +x app/reminder.sh
+
+#create my last file
+cat > startup.sh << 'EOF'
+#!/bin/bash
+cd app
+./reminder.sh
+EOF
+
+chmod +x startup.sh
+
+echo "Environment successfully setup"
