@@ -7,6 +7,7 @@ cd "submission_reminder_$username"
  
 
 #creating subdirectories and their files
+#creating subdirectory app and its file reminder.sh
 
 mkdir -p app
 cat > app/reminder.sh << 'EOF'
@@ -31,7 +32,7 @@ EOF
 chmod +x app/reminder.sh
 
 
-#creating my second subdirectory and its file
+#creating my modules subdirectory and its file functions.sh
 
 mkdir -p modules
 cat > modules/functions.sh << 'EOF'
@@ -61,7 +62,7 @@ EOF
 chmod +x modules/functions.sh
 
 
-#creating my third subdirectory and its file  
+#creating my assets subdirectory and its file  submissions.txt
 mkdir -p assets
 cat > assets/submissions.txt << 'EOF'
 Student, assignment, submission status
@@ -79,7 +80,7 @@ EOF
 #making the file executable
 chmod +x assets/submissions.txt
 
-#creating my fourth subdirectory and its  file
+#creating my config subdirectory and its  file config.env
 mkdir -p config
 cat > config/config.env << 'EOF'
 # This is the config file
@@ -92,7 +93,7 @@ chmod +x config/config.env
 
 
 
-#create my last file
+#create the startup.sh file
 cat > startup.sh << 'EOF'
 #!/bin/bash
 cd app
